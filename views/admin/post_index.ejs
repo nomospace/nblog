@@ -1,0 +1,23 @@
+<div id="nav">
+  <ul>
+    <li><a href="/admin">后台首页</a><span> ›</span></li>
+    <li><a href="/admin/post">文章列表</a></li>
+  </ul>
+  <div class="quick"><a href="/admin/post/write" title="创建文章"><span>创建文章</span></a></div>
+</div>
+<div id="post-list">
+  <ul>
+    <% post_list.forEach(function(item){ %>
+    <li>
+      <a href='/admin/post/edit/<%=item.id%>'><%=item.title%></a>
+
+      <div class='action'>
+          <span class='edit'>
+            <a href='/post/<%=item.id%>' target='_blank'>预览</a>
+            <a href='/admin/post/delete/<%=item.id%>'>删除</a>
+          </span>
+      </div>
+    </li>
+    <% }); %>
+  </ul>
+</div>

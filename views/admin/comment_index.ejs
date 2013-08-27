@@ -1,0 +1,34 @@
+<div id="nav">
+  <ul>
+    <li><a href="/admin">后台首页</a><span> ›</span></li>
+    <li><a href="/admin/comment">评论列表</a></li>
+  </ul>
+  <!--<div class="quick"><a href="/admin/post/write" title="Write Post"><span>Write</span></a></div>-->
+</div>
+<div id="comment-status">
+  <a href="?status=1" data-status='1'>正常</a>
+  <a href="?status=0" data-status='0'>垃圾评论</a>
+</div>
+<div id='comment-list'>
+  <ul>
+    <% comment_list.forEach(function(item){ %>
+    <li>
+      <input type="checkbox" data-id="<%=item._id%>"/>
+      <a href='/post?id=<%= item.post_id %>'><%= item.author %></a>
+      <span>&nbsp;post comment on&nbsp;</span>
+      <% posts.forEach(function(post){ %> <% if (post._id == item.post_id){ %> <a href='/post/<%= post.slug %>'><%=
+      post.title %></a> <% } %> <% }); %>
+      <time><%= item.created %></time>
+      <span>Status:<%= item.status %></span>
+      <a class='action delete' href='/admin/comment/delete/<%=item._id%>'>Delete</a>
+      <a class='action spam' href='/admin/submitSpam/<%=item._id%>'>SPAM</a>
+
+      <div class='content'><%= item.content %></div>
+      <% }); %>
+  </ul>
+</div>
+<script type="text/javascript">
+  (function() {
+    $("#comment-status").find("a[data-status='<%=status%>']").addClass('current');
+  })();
+</script>

@@ -1,0 +1,23 @@
+<div id="nav">
+  <ul>
+    <li><a href="/admin">后台首页</a><span> ›</span></li>
+    <li><a href="/admin/photo">相片列表</a><span> ›</span></li>
+    <li><a href="/admin/photo/write">创建相片</a></li>
+  </ul>
+</div>
+<div class="photo-list">
+  <form class="photo-body" method='post'>
+    <div class="form-item"><strong>设置相片路径：</strong></div>
+    <div class="form-item">
+      标题 <input type="text" name="title"/>
+    </div>
+    <div class="form-item">
+      原图地址 <input type="text" class="photo-url" name="raw_url"/>
+    </div>
+    <div class="form-item">
+      缩略图地址 <input type="text" class="photo-url" name="preview_url"/>
+    </div>
+    <input type="hidden" name="photo_id"/>
+    <input type="submit" value="保存" class="form-save"/>
+  </form>
+</div>

@@ -1,0 +1,56 @@
+<div id="nav">
+  <ul>
+    <li><a href="/admin">后台首页</a><span> ›</span></li>
+    <li><a href="/admin/post">文章列表</a></li>
+  </ul>
+  <div class="quick"><a href="/admin/post/write" title="创建文章"><span>创建文章</span></a></div>
+</div>
+<form id='write_post' method='post'>
+  <div id='post_info'>
+    <div class='item title'>
+      <label for='post_title'><span>Title</span></label>
+      <input type='text' name='title' id='post_title' required=""/>
+    </div>
+    <div class='item slug'>
+      <label for='post_slug'><span>Slug</span></label>
+      <input type='text' name='slug' id='post_slug' required="">
+    </div>
+    <div class='item created'>
+      <label for='post_created'><span>Created</span></label>
+      <input type='text' name='created' id='post_created' readonly='' required=''>
+    </div>
+    <div class='item tags'>
+      <label for='post_tags'><span>Tags</span></label>
+      <input type='text' name='tags' id='post_tags' required='' placeholder="标签，在英文逗号分割">
+    </div>
+    <div class='clearfix'></div>
+  </div>
+  <div id='content'>
+    <div class="wmd-panel">
+      <div id="wmd-button-bar"></div>
+      <textarea class="wmd-input post_content" name='content' id="wmd-input" required=''></textarea>
+    </div>
+  </div>
+  <div id='meta'>
+    <button class='btn btn-small'><a id='post-it'>OK,post it!</a></button>
+  </div>
+  <div class="clearfix"></div>
+  <div id="preview">
+    <div id="wmd-preview" class="wmd-panel wmd-preview"></div>
+  </div>
+</form>
+<script>
+  $('input#post_created').simpleDatepicker({ startdate: 2009, enddate: 2013 });
+  (function() {
+    var converter = Markdown.getSanitizingConverter();
+    var editor = new Markdown.Editor(converter);
+    editor.run();
+//    window.onbeforeunload = function(){
+//      return '你正在编辑日志，确定不保存编辑内容吗？';
+//    };
+//
+//    $("#post-it").click(function(){
+//      window.onbeforeunload = null;
+//    });
+  })();
+</script>

@@ -1,0 +1,20 @@
+<div id="nav">
+  <ul>
+    <li><a href="/admin">后台首页</a><span> ›</span></li>
+    <li><a href="/admin/photo">相片列表</a></li>
+  </ul>
+  <div class="quick"><a href="/admin/photo/write"><span>创建相片</span></a></div>
+</div>
+<ul class="photo-list clearfix">
+  <% photos.forEach(function(item){ %>
+  <li class="photo-item">
+    <a href="/admin/photo/edit/<%=item.photo_id%>">
+      <img src="<%=item.preview_url%>" alt="<%=item.title%>"
+           onerror="this.src='http://r.ph.126.net/image/default/duser.png'"/>
+    </a>
+    <p><%=item.title%></p>
+    <a href="/admin/photo/edit/<%=item.photo_id%>">编辑</a>
+    <a href="/admin/photo/delete/<%=item.photo_id%>">删除</a>
+  </li>
+  <% }); %>
+</ul>

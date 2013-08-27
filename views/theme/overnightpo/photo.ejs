@@ -1,0 +1,16 @@
+<div id="main" class="container page">
+  <h1 class="title">相片列表</h1>
+  <article class="post">
+    <ul class="photo-list clearfix">
+      <% photos.forEach(function(item){ %>
+      <li class="photo-item">
+        <a href="/admin/photo/edit/<%=item.photo_id%>">
+          <img src="<%=item.preview_url%>" alt="<%=item.title%>"
+               onerror="this.src='http://r.ph.126.net/image/default/duser.png'"/>
+        </a>
+        <p><%=item.title%></p>
+      </li>
+      <% }); %>
+    </ul>
+  </article>
+</div>
