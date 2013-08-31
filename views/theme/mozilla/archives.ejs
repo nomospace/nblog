@@ -8,7 +8,7 @@
         <%year.archives.forEach(function(item){%>
         <li>
           <time datetime="<%=item.created%>"><%=item.created%></time>
-          <a href="/post/<%=item.slug%>"><%=item.title%></a>
+          <a href="/post/<%=item.id%>"><%=item.title%></a>
         </li>
         <%})%>
       </ul>

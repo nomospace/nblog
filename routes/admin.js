@@ -8,19 +8,16 @@ var photoDao = require('../dao/photo.js');
 var dateFormat = require('dateformat');
 var marked = require('marked');
 var akismet = require('akismet').client({blog: config.akismet_options.blog, apiKey: config.akismet_options.apikey/*, debug: true*/});
-//URL: /admin
-exports.index = function(req, res) {
+function _index(req, res) {
   res.render('admin/index', {layout: true});
-};
-// URL: /admin/post
-exports.postIndex = function(req, res) {
+}
+function _postIndex(req, res) {
   postDao.all(function(err, result) {
     if (!err)
       res.render('admin/post_index', {layout: true, post_list: result, title: '日志列表'});
   });
-};
-// URL : /admin/post/write
-exports.postWrite = function(req, res) {
+}
+function _postWrite(req, res) {
   if (req.method == 'GET') {//render post write view
     res.render('admin/post_write', {layout: true});
   } else if (req.method == 'POST') {// POST a post
@@ -44,9 +41,8 @@ exports.postWrite = function(req, res) {
       }
     });
   }
-};
-// URL : /admin/post/edit
-exports.postEdit = function(req, res) {
+}
+function _postEdit(req, res) {
   if (req.method == "GET") {
     var id = req.params.id;
     postDao.get({'id': id}, function(err, post) {
@@ -73,8 +69,8 @@ exports.postEdit = function(req, res) {
       }
     });
   }
-};
-exports.postDelete = function(req, res) {
+}
+function _postDelete(req, res) {
   if (req.method == "GET") {
     postDao.deleteById(req.params.id, function(err, result) {
       if (!err) {
@@ -82,16 +78,14 @@ exports.postDelete = function(req, res) {
       }
     });
   }
-};
-// URL: /admin/page
-exports.pageIndex = function(req, res) {
+}
+function _pageIndex(req, res) {
   pageDao.all(function(err, result) {
     if (!err)
       res.render('admin/page_index', {layout: true, page_list: result});
   });
-};
-// URL : /admin/page/write
-exports.pageWrite = function(req, res) {
+}
+function _pageWrite(req, res) {
   if (req.method == 'GET') {//render post write view
     res.render('admin/page_write', {layout: true});
   } else if (req.method == 'POST') {// POST a post
@@ -114,9 +108,8 @@ exports.pageWrite = function(req, res) {
       }
     });
   }
-};
-// URL : /admin/page/edit
-exports.pageEdit = function(req, res) {
+}
+function _pageEdit(req, res) {
   if (req.method == "GET") {
     var id = req.params.id;
     pageDao.get({id: id}, function(err, page) {
@@ -142,9 +135,8 @@ exports.pageEdit = function(req, res) {
         res.redirect('/admin/page/edit/' + req.body.page_id + "?msg=success");
     });
   }
-};
-// URL : /admin/page/delete
-exports.pageDelete = function(req, res) {
+}
+function _pageDelete(req, res) {
   if (req.method == "GET") {
     pageDao.deleteById(req.params.id, function(err, result) {
       if (!err) {
@@ -152,8 +144,8 @@ exports.pageDelete = function(req, res) {
       }
     });
   }
-};
-exports.commentIndex = function(req, res) {
+}
+function _commentIndex(req, res) {
   var limit = 100;
   var status = req.query['status'];
   if (!status) status = '1';
@@ -161,19 +153,19 @@ exports.commentIndex = function(req, res) {
     postDao.all(function(err, posts) {
       res.render('admin/comment_index', {layout: true, comment_list: comments, posts: posts, status: status});
     });
-  })
-};
-exports.commentDelete = function(req, res) {
+  });
+}
+function _commentDelete(req, res) {
   commentDao.deleteById(req.params.id, function(err, result) {
     res.redirect("/admin/comment");
-  })
-};
-exports.verifyAkismet = function(req, res) {
-  akismet.verifyKey(function(err, verified) {
-    res.render('admin/verifyAkismet', {layout: true, status: !!verified});
   });
 };
-exports.submitSpam = function(req, res) {
+function _verifyAkismet(req, res) {
+  akismet.verifyKey(function(err, verified) {
+    res.render('admin/verify_akismet', {layout: true, status: !!verified});
+  });
+}
+function _submitSpam(req, res) {
   commentDao.findOne(req.params.id, function(err, comment) {
     if (!err) {
       // buggy
@@ -198,8 +190,8 @@ exports.submitSpam = function(req, res) {
     }
     res.redirect("/admin/comment");
   });
-};
-exports.photoIndex = function(req, res) {
+}
+function _photoIndex(req, res) {
   var limit = 999;
   photoDao.all({}, limit, function(err, photos) {
     res.render('admin/photo_index', {layout: true, photos: photos});
@@ -235,8 +227,8 @@ exports.photoEdit = function(req, res) {
 //        res.redirect('/admin/photo/edit/' + req.body.photo_id + "?msg=success");
     });
   }
-};
-exports.photoWrite = function(req, res) {
+}
+function _photoWrite(req, res) {
   if (req.method == 'GET') {//render post write view
     res.render('admin/photo_write', {layout: true});
   } else if (req.method == 'POST') {// POST a post
@@ -260,8 +252,8 @@ exports.photoWrite = function(req, res) {
       }
     });
   }
-};
-exports.photoDelete = function(req, res) {
+}
+function _photoDelete(req, res) {
   if (req.method == "GET") {
     photoDao.deleteById(req.params.id, function(err, result) {
       if (!err) {
@@ -269,9 +261,8 @@ exports.photoDelete = function(req, res) {
       }
     });
   }
-};
-//URL: /admin/login
-exports.login = function(req, res) {
+}
+function _login(req, res) {
   if (req.method == "GET") {
     res.render("admin/login", {layout: true});
   } else if (req.method == "POST") {
@@ -295,24 +286,22 @@ exports.login = function(req, res) {
           });
           return;
         }
-        gen_session(user, res);// store session cookie
+        _genSession(user, res);// store session cookie
         res.redirect('/admin');
       } else {
         res.redirect('/admin/login');
       }
     });
   }
-};
-//URL: /admin/logout
-exports.logout = function(req, res, next) {
+}
+function _logout(req, res, next) {
   req.session.destroy();
   res.clearCookie(config.auth_cookie_name, {
     path: '/'
   });
   res.redirect('/');
 };
-// auth_user middleware
-exports.auth_user = function(req, res, next) {
+function _authUser(req, res, next) {
   if (req.session.user) {
     return next();
   }
@@ -333,9 +322,8 @@ exports.auth_user = function(req, res, next) {
       }
     });
   }
-};
-// URL:  /install
-exports.install = function(req, res, next) {
+}
+function _install(req, res, next) {
   userDao.findAll({}, function(err, result) {
     if (!err) {
       if (result.length > 0) {
@@ -390,12 +378,44 @@ exports.install = function(req, res, next) {
       next();
     }
   });
-};
+}
 /** private function */
-function gen_session(user, res) {
+function _genSession(user, res) {
   var auth_token = util.encrypt(user.name + '\t' + user.password, config.session_secret);
   res.cookie(config.auth_cookie_name, auth_token, {
     path: '/',
     maxAge: 1000 * 60 * 60 * 24 * 7
   }); // cookie 有效期1周
 }
+//URL: /admin
+exports.index = _index;
+// URL: /admin/post
+exports.postIndex = _postIndex;
+// URL : /admin/post/write
+exports.postWrite = _postWrite;
+// URL : /admin/post/edit
+exports.postEdit = _postEdit;
+exports.postDelete = _postDelete;
+// URL: /admin/page
+exports.pageIndex = _pageIndex;
+// URL : /admin/page/write
+exports.pageWrite = _pageWrite;
+// URL : /admin/page/edit
+exports.pageEdit = _pageEdit;
+// URL : /admin/page/delete
+exports.pageDelete = _pageDelete;
+exports.commentIndex = _commentIndex;
+exports.commentDelete = _commentDelete;
+exports.verifyAkismet = _verifyAkismet;
+exports.submitSpam = _submitSpam;
+exports.photoIndex = _photoIndex;
+exports.photoWrite = _photoWrite;
+exports.photoDelete = _photoDelete;
+//URL: /admin/login
+exports.login = _login;
+//URL: /admin/logout
+exports.logout = _logout;
+// authUser middleware
+exports.authUser = _authUser;
+// URL:  /install
+exports.install = _install;

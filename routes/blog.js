@@ -3,13 +3,14 @@ var data2xml = require('data2xml');
 var marked = require('marked');
 var dateFormat = require('dateformat');
 var gravatar = require('gravatar');
-var akismet = require('akismet').client({blog: config.akismet_options.blog, apiKey: config.akismet_options.apikey});
+var akismet = require('akismet').client({
+  blog: config.akismet_options.blog, apiKey: config.akismet_options.apikey
+});
 var photoDao = require('../dao/photo');
 var postDao = require('../dao/post');
 var pageDao = require('../dao/page');
 var commentDao = require('../dao/comment');
-// URL /
-exports.index = function(req, res, next) {
+function _index(req, res, next) {
   postDao.count({}, function(err, count) {
     if (count == 0) {
       res.redirect("/admin/install");
@@ -38,9 +39,8 @@ exports.index = function(req, res, next) {
       res.render('theme/' + config.theme + '/index', index_obj);
     });
   });
-};
-// URL /tag/*
-exports.tag = function(req, res, next) {
+}
+function _tag(req, res, next) {
   postDao.findByTag(req.params.tag, function(err, result) {
     if (err) return;
     for (var i = 0; i < result.length; i++) {
@@ -49,9 +49,8 @@ exports.tag = function(req, res, next) {
     var tag_obj = {name: config.name, title: config.name, posts: result, tag_name: req.params.tag};
     res.render('theme/' + config.theme + '/tag', tag_obj);
   });
-};
-// URL: /post/id
-exports.post = function(req, res, next) {
+}
+function _post(req, res, next) {
   postDao.get({id: req.params.id}, function(err, post) {
     if (err) {
       res.statusCode = 500;
@@ -84,9 +83,8 @@ exports.post = function(req, res, next) {
       });
     }
   });
-};
-// URL: /page/slug
-exports.page = function(req, res, next) {
+}
+function _page(req, res, next) {
   pageDao.get({'slug': req.params.slug}, function(err, page) {
     if (!err && page != null) {
       page.content = marked(page.content);
@@ -100,12 +98,12 @@ exports.page = function(req, res, next) {
       res.render('theme/' + config.theme + '/page', {page: page, name: config.name, title: page.page_title});
     }
     else {
-      next();
+      pageNotFound(req, res);
+//      next();
     }
   });
-};
-// POST URL: /comment
-exports.comment = function(req, res, next) {
+}
+function _comment(req, res, next) {
   var id = req.body.id;
   var slug = req.body.slug;
   //这是一个隐藏的input，如果有值，说明是垃圾评论机器人
@@ -176,9 +174,8 @@ exports.comment = function(req, res, next) {
       }
     });
   }
-};
-// URL: /feed
-exports.feed = function(req, res) {
+}
+function _feed(req, res) {
   if (!config.rss) {
     res.statusCode = 404;
     res.send('Please set `rss` in config.js');
@@ -219,16 +216,14 @@ exports.feed = function(req, res) {
     res.contentType('application/xml');
     res.send(rss_content);
   });
-};
-// URL: /photo
-exports.photo = function(req, res) {
+}
+function _photo(req, res) {
   var limit = 999;
   photoDao.all({}, limit, function(err, photos) {
     res.render('theme/' + config.theme + '/photo', {title: config.name + " › 相片列表", photos: photos, name: config.name});
   });
-};
-// URL: /archive
-exports.archives = function(req, res) {
+}
+function _archives(req, res) {
   var sortNumber = function(a, b) {
     return a.year < b.year
   };
@@ -243,11 +238,28 @@ exports.archives = function(req, res) {
     archiveList = archiveList.sort(sortNumber);
     res.render('theme/' + config.theme + '/archives', {title: config.name + " › 文章存档", archives: archiveList, name: config.name});
   });
-};
-// URL: /404
-exports.pageNotFound = function(req, res) {
+}
+function _pageNotFound(req, res) {
   console.log('404 handler, URL' + req.originalUrl);
   res.render('theme/' + config.theme + '/404', {
-    layout: true, status: 404, title: '页面未找到 - 404'
+    layout: true, status: 404, title: '页面未找到 - 404', name: 'nblog'
   });
-};
+}
+// URL /
+exports.index = _index;
+// URL: /post/id
+exports.post = _post;
+// URL: /page/slug
+exports.page = _page;
+// URL /tag/*
+exports.tag = _tag;
+// POST URL: /comment
+exports.comment = _comment;
+// URL: /feed
+exports.feed = _feed;
+// URL: /photo
+exports.photo = _photo;
+// URL: /archive
+exports.archives = _archives;
+// URL: /404
+exports.pageNotFound = _pageNotFound;
