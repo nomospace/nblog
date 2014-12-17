@@ -1,4 +1,4 @@
-var util = require('../lib/util.js');
+var util = require('../libs/util.js');
 var config = require('../config.js').config;
 var userDao = require('../dao/user.js');
 var postDao = require('../dao/post.js');
@@ -159,7 +159,7 @@ function _commentDelete(req, res) {
   commentDao.deleteById(req.params.id, function(err, result) {
     res.redirect("/admin/comment");
   });
-};
+}
 function _verifyAkismet(req, res) {
   akismet.verifyKey(function(err, verified) {
     res.render('admin/verify_akismet', {layout: true, status: !!verified});
@@ -196,7 +196,7 @@ function _photoIndex(req, res) {
   photoDao.all({}, limit, function(err, photos) {
     res.render('admin/photo_index', {layout: true, photos: photos});
   });
-};
+}
 exports.photoEdit = function(req, res) {
   if (req.method == "GET") {
     var id = req.params.photo_id;

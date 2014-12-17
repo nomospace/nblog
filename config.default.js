@@ -2,7 +2,7 @@ var mongoskin = require('mongoskin');
 var config = {
   //site settings
   name: 'nblog',
-  version: '0.0.1',
+  version: '0.0.2',
   postNum: process.env.POST_NUM || '5',//每页显示文章个数
   session_secret: process.env.SESSION_SECRET || 'a743894a0e',//session加密串
   cookie_secret: process.env.COOKIE_SECRET || 'a743894a0e',//session加密串
@@ -20,14 +20,14 @@ config.rss = {
   max_rss_items: '5',
   title: 'nblog',
   description: 'A simple, lightweight blog inspired by noderce.',
-  link: process.env.RSS_LINK || 'http://nomospace.github.io/',
+  link: process.env.RSS_LINK || 'http://nomospace.com/',
   language: 'zh-cn',
   managingEditor: 'jinlu_hz@163.com (nomospace)',
   webMaster: 'jinlu_hz@163.com (nomospace)',
   generator: 'nblog',
   author: {
     name: 'nomospace',
-    uri: 'http://nomospace.github.io/'
+    uri: 'http://nomospace.com/'
   },
   thanksTo: {
     name: 'willerce',
